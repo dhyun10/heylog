@@ -18,7 +18,7 @@ function ajaxJSON(url, method, query, fn){
 		error:function(jqXHR){
 			if(jqXHR.status===403){
 				login();
-				return false;
+				return false; 
 			}
 			console.log(jqXHR.responseText);
 		}

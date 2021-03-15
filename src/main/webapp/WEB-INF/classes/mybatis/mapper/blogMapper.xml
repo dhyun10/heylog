@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="blog">
+	<insert id="insertGuest" parameterType="com.myblog.heylog.blog.Blog">
+		insert into guest(blogNum, guestNum, userId, content, created, secretType) 
+		values (#{blogNum}, guest_seq.nextval, #{userId}, #{content}, sysdate, #{secretType})
+	</insert>
+	
+	<select id="listGuest" resultType="com.myblog.heylog.blog.Blog">
+		select blogNum, g.guestNum, g.userId, userNick, content, 
+			to_char(created, 'YYYY-MM-DD HH24:MI') created, secretType, replyCount 
+		from guest g
+		join member1 m on m.userId=g.userId
+		LEFT OUTER JOIN (
+			SELECT guestNum, COUNT(*) replyCount FROM guestreply
+			GROUP BY guestNum
+		) r ON g.guestNum=r.guestNum
+		where blogNum=#{blogNum}
+		order by guestNum desc
+		OFFSET #{offset} ROWS FETCH FIRST #{rows} ROWS ONLY 
+	</select>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		select nvl(COUNT(*), 0)
+		from guest
+		where blogNum=#{blogNum}	
+	</select>
+	
+	<update id="updateGuest" parameterType="com.myblog.heylog.blog.Blog">
+		update guest set content=#{content}, secretType=#{secretType}
+		where blogNum=#{blogNum} and guestNum=#{guestNum}
+	</update>
+	
+	<delete id="deleteGuest" parameterType="com.myblog.heylog.blog.Blog">
+		delete from guest
+		where blogNum=#{blogNum} and guestNum=#{guestNum}
+	</delete>
+	
+	<insert id="insertGuestReply" parameterType="com.myblog.heylog.blog.Reply">
+		insert into guestreply(guestNum, replyNum, userId, content, created) values
+			(#{guestNum}, guestreply_seq.nextval, #{userId}, #{content}, sysdate)
+	</insert>
+	
+	<select id="guestReplyCount" parameterType="map" resultType="Integer">
+		select nvl(COUNT(*), 0)
+		from guestreply
+		where guestNum=#{guestNum}	
+	</select>
+	
+	<select id="listGuestReply" resultType="com.myblog.heylog.blog.Reply">
+		select guestNum, replyNum, r.userId, userNick, content, to_char(created, 'YYYY-MM-DD HH24:MI') created
+		from guestreply r
+		join member1 m on r.userId=m.userId
+		where guestNum=#{guestNum}  
+		order by replyNum asc
+	</select>
+	
+	<delete id="deleteGuestReply" parameterType="com.myblog.heylog.blog.Reply">
+		delete from guestreply
+		where replyNum=#{replyNum}
+	</delete>
+</mapper>

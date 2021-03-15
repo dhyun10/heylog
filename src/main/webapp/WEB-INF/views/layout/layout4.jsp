@@ -1,0 +1,51 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HEYLOG !</title>
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/layout.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/jquery/css/smoothness/jquery-ui.min.css" type="text/css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/jquery/js/jquery.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util-jquery.js"></script>
+</head>
+
+<body>
+
+<div class="header">
+    <tiles:insertAttribute name="header"/>
+</div>
+
+<div class="container">
+    <div class="body-container">
+        <div class="body-left">
+            <tiles:insertAttribute name="left"/>
+        </div>
+    
+        <div class="body-right">
+            <tiles:insertAttribute name="body"/>
+        </div>
+    </div>        
+</div>
+
+<div class="footer">
+    <tiles:insertAttribute name="footer"/>
+</div>
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/jquery/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/jquery/js/jquery.ui.datepicker-ko.js"></script>
+</body>
+</html>

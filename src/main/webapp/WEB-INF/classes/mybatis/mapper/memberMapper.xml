@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<insert id="insertMember1" parameterType="com.myblog.heylog.member.Member">
+		insert into member1(userNum, userName, userNick, userId, userPwd, created_date, last_login, email)
+		values (member_seq.nextval, #{userName}, #{userId}, #{userId}, #{userPwd}, sysdate, sysdate, #{email})
+	</insert>
+	
+	<insert id="insertMember2" parameterType="com.myblog.heylog.member.Member">
+		insert into member2(userId, userName, tel, email, birth) values
+		(#{userId}, #{userName}, #{tel}, #{email}, #{birth})
+	</insert>
+	
+	<insert id="getKey" parameterType="Map">
+		update member1 set userkey=#{userkey} where userId=#{userId}
+	</insert>
+	
+	<update id="alter_userkey" parameterType="Map">
+		update member1 set userkey='Y' where userId=#{userId} and userkey=#{userkey}
+	</update>
+	
+	<select id="check_id" parameterType="com.myblog.heylog.member.Member" resultType="Integer">
+		select count(*) from member1 where userId=#{userId}
+	</select>
+	
+	<select id="check_email" parameterType="com.myblog.heylog.member.Member" resultType="Integer">
+		select count(*) from member2 where email=#{email}
+	</select>
+	
+	<select id="loginMember" parameterType="String" resultType="com.myblog.heylog.member.Member">
+		SELECT userNum, userId, userNick, userName, userPwd, created_date, last_login, 
+				userkey
+		FROM member1
+		WHERE userId=#{userId} and userkey='Y' 
+	</select>
+	
+	<update id="updateLastLogin" parameterType="com.myblog.heylog.member.Member">
+		UPDATE member1 SET last_login=SYSDATE WHERE userId=#{userId}
+	</update>
+	
+	<select id="searchId" parameterType="com.myblog.heylog.member.Member" resultType="String">
+		select NVL(userId, '0') from member2 
+		<where>
+			userName=#{userName} and
+			<if test="tel!=null">
+				tel=#{tel}
+			</if>
+			<if test="email!=null">
+				email=#{email}
+			</if>
+		</where>
+	</select>
+	
+	<update id="searchPassword" parameterType="Map">
+		update member1 set userPwd=#{userPwd}
+		where userId=#{userId} and email=#{email}
+	</update>
+	
+	<select id="readMember" parameterType="Map" resultType="com.myblog.heylog.member.Member">
+		select m1.userId, m1.userName, userNick, userPwd, to_char(birth, 'YYYY-MM-DD') birth, tel, m1.email
+		from member1 m1
+		join member2 m2 on m1.userId=m2.userId
+		where m1.userId=#{userId}
+	</select>
+	
+	<update id="updateMember1" parameterType="com.myblog.heylog.member.Member">
+		update member1 set email=#{email}
+		where userId=#{userId}
+	</update>
+	
+	<update id="updateMember2" parameterType="com.myblog.heylog.member.Member">
+		update member2 set tel=#{tel}, email=#{email}, birth=#{birth}
+		where userId=#{userId}
+	</update>
+	
+	<update id="updatePwd" parameterType="Map">
+		update member1 set userPwd=#{userPwd}
+		where userId=#{userId}
+	</update>
+	
+	<delete id="deleteMember1" parameterType="Map">
+		delete from member1	where userId=#{userId}
+	</delete>
+	
+	<delete id="deleteMember2" parameterType="Map">
+		delete from member2	where userId=#{userId}
+	</delete>
+	
+</mapper>

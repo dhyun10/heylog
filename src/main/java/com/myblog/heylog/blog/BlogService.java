@@ -18,4 +18,11 @@ public interface BlogService {
 	public int guestReplyCount(int guestNum);
 	
 	public List<Reply> listGuestReply(int guestNum) throws Exception;
+	
+	public void insertBoard(Board dto) throws Exception;
+	public void updateBoard(Board dto) throws Exception;
+	public void deleteBoard(Board dto) throws Exception;
+	
+	public List<Board> listBoard(int categoryNum) throws Exception;
+	
 }

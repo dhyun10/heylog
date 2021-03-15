@@ -220,7 +220,7 @@ public class BlogController {
 		return model;
 	}
 	
-	@RequestMapping("{userId}/list/{category}")
+	@RequestMapping("{userId}/category/{category}")
 	public String categoryList(
 			@PathVariable String userId,
 			@PathVariable String category,
@@ -233,9 +233,47 @@ public class BlogController {
 		
 		List<Manage> list=mService.listCategory(map);
 		
+		map.put("category", category);
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("list", list);
+		model.addAttribute("category", category);
+		
+		return ".blog3.category.list";
+	}
+	
+	@RequestMapping(value = "{userId}/board/write", method = RequestMethod.GET)
+	public String writeForm(
+			@PathVariable String userId,
+			Model model
+			) throws Exception {
+		Manage dto=mService.readBlog(userId);
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("blogNum", dto.getBlogNum());
+		
+		List<Manage> list=mService.listCategory(map);
+		
 		model.addAttribute("dto", dto);
 		model.addAttribute("list", list);
 		
-		return ".blog3.category.list";
+		return ".blog3.category.write";
+	}
+	
+	@RequestMapping(value = "{userId}/board/write", method = RequestMethod.POST)
+	public String writeSubmit(
+			@PathVariable String userId,
+			HttpSession session,
+			Board dto
+			) throws Exception {
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		
+		try {
+			dto.setUserId(info.getUserId());
+			service.insertBoard(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:/manage/home";
 	}
 }

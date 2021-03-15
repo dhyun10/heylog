@@ -103,4 +103,32 @@ public class BlogServiceImpl implements BlogService {
 		return list;
 	}
 
+	@Override
+	public void insertBoard(Board dto) throws Exception {
+		try {
+			dao.insertData("blog.insertBoard", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updateBoard(Board dto) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteBoard(Board dto) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Board> listBoard(int categoryNum) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

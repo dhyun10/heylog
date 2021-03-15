@@ -60,4 +60,17 @@
 		delete from guestreply
 		where replyNum=#{replyNum}
 	</delete>
+	
+	<insert id="insertBoard" parameterType="com.myblog.heylog.blog.Board">
+		insert into board(categoryNum, userId, boardNum, subject, content, hitCount, created, thumbnail, enabled)
+		values (#{categoryNum}, #{userId}, board_seq.nextval, #{subject}, #{content}, 0, sysdate, 'none', 1)
+	</insert>
+	
+	<select id="listBoard" resultType="com.myblog.heylog.blog.Board">
+		select userId, boardNum, subject, created, enabled
+		from board
+		where categoryNum=#{categoryNum}
+		order by boardNum desc
+	</select>
+	
 </mapper>

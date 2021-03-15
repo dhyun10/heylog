@@ -34,10 +34,14 @@ $(function() {
                 <a href="${pageContext.request.contextPath}/member/sign">로그인</a>
             </c:if>
             <c:if test="${not empty sessionScope.member}">
-                <div style="color:white;" id="submenu">${sessionScope.member.userName}님!&nbsp;<i class="fas fa-angle-down"></i>&nbsp;
+                <div style="color:white;" id="submenu">${sessionScope.member.userName}님!&nbsp;
+                
+                <i class="fas fa-angle-down"></i>&nbsp;
                 	<div style="display: none;" class="sublist">
+	            <c:if test="${sessionScope.member.userId!='admin'}">
 	                	<ul><li><a href="${pageContext.request.contextPath}/manage/home">블로그관리</a></li></ul>
-                		<ul><li><a href="${pageContext.request.contextPath}/member/home">마이페이지</a></li></ul>
+                		<ul><li><a href="${pageContext.request.contextPath}/member/home">내 정보</a></li></ul>
+                </c:if>
                 		<ul><li><a href="${pageContext.request.contextPath}/member/logout">로그아웃</a></li></ul>
                 	</div>
                 </div>

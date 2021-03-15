@@ -52,7 +52,7 @@ function ajaxHTML(url, method, query, selector) {
 
 <div class="body-container">
 	<div class="blogLayout">
-        전체 게시물 (0)
+        ${category} (0)
     	<div class="listLayout">
     		<div class="list-category">
     			<span class="list-thumbnail">
@@ -117,9 +117,6 @@ function ajaxHTML(url, method, query, selector) {
     	</div>
     	<div>
     		<button class="btn4">새로고침</button>
-	 		<c:if test="${sessionScope.member.userId==dto.userId}">
-    		<button class="btn3" style="float: right;">글쓰기</button>
-    		</c:if>
     	</div>
 	</div>
 </div>

@@ -70,7 +70,7 @@
     	</div>
     	<div>
     		<button class="btn4">새로고침</button>
-    		<button class="btn3" style="float: right;">글쓰기</button>
+    		<a href="${pageContext.request.contextPath}/${sessionScope.member.userId}/board/write"><button class="btn3" style="float: right;">글쓰기</button></a>
     	</div>
     </div>
 </div>

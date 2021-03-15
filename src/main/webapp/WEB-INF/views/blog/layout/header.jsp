@@ -21,19 +21,19 @@ $(function() {
 		<div class="menu-list">
 			<ul>
 				<c:forEach var="vo" items="${list}">
-				<li>· <a href="${pageContext.request.contextPath}/${dto.userId}/list/${vo.category}">${vo.category}</a> <span>&nbsp;(0)</span></li>
+				<li>· <a href="${pageContext.request.contextPath}/${dto.userId}/category/${vo.category}">${vo.category}</a> <span>&nbsp;(0)</span></li>
 				</c:forEach>
 			</ul>
 		</div>
 		<div class="menu-list">
 			<ul>
-			<li><a>홈</a></li>
+			<li><a href="${pageContext.request.contextPath}/${dto.userId}">홈</a></li>
 			<li><a href="${pageContext.request.contextPath}/${dto.userId}/guest">방명록</a></li>
 			</ul>
 		</div>
 			<div class="menu-list">
 				<c:if test="${sessionScope.member.userId==dto.userId}">
-					<a>글쓰기</a>
+					<a href="${pageContext.request.contextPath}/${sessionScope.member.userId}/board/write">글쓰기</a>
 				</c:if>
 				<c:if test="${not empty sessionScope.member}">
 					<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>

@@ -34,7 +34,10 @@ public class BlogController {
 	
 	@RequestMapping("{userId}")
 	public String blog(
-			@PathVariable String userId,
+			@PathVariable String userId,			
+			@RequestParam(value="page", defaultValue="1") int current_page,
+			@RequestParam(value = "rows", defaultValue = "5") int rows,
+			HttpServletRequest req,
 			Model model
 			) throws Exception {
 		Manage dto=mService.readBlog(userId);
@@ -44,8 +47,37 @@ public class BlogController {
 		
 		List<Manage> list=mService.listCategory(map);
 		
+		map.put("userId", userId);
+		int total_page;
+
+		int boardCount=service.boardCount(map);
+		total_page=myUtil.pageCount(rows, boardCount);
+		
+		if (total_page < current_page)
+			current_page = total_page;
+
+        int offset = (current_page-1) * rows;
+		if(offset < 0) offset = 0;
+        map.put("offset", offset);
+        map.put("rows", rows);
+        
+		List<Board> bList=service.listBoard(map);
+        
+		String cp = req.getContextPath();
+		String listUrl = cp + "/"+userId;
+
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+		
+		model.addAttribute("page", current_page);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+		model.addAttribute("rows", rows);
+		
 		model.addAttribute("dto", dto);
 		model.addAttribute("list", list);
+		
+		model.addAttribute("boardCount", boardCount);
+		model.addAttribute("bList", bList);
 		
 		return ".blog3.home";
 	}
@@ -223,7 +255,10 @@ public class BlogController {
 	@RequestMapping("{userId}/category/{category}")
 	public String categoryList(
 			@PathVariable String userId,
-			@PathVariable String category,
+			@PathVariable String category,			
+			@RequestParam(value="page", defaultValue="1") int current_page,
+			@RequestParam(value = "rows", defaultValue = "5") int rows,
+			HttpServletRequest req,
 			Model model
 			) throws Exception {
 
@@ -233,11 +268,40 @@ public class BlogController {
 		
 		List<Manage> list=mService.listCategory(map);
 		
+		map.put("userId", userId);
 		map.put("category", category);
+		
+		int total_page;
+
+		int boardCount=service.boardCount(map);
+		total_page=myUtil.pageCount(rows, boardCount);
+		
+		if (total_page < current_page)
+			current_page = total_page;
+
+        int offset = (current_page-1) * rows;
+		if(offset < 0) offset = 0;
+        map.put("offset", offset);
+        map.put("rows", rows);
+        
+		List<Board> bList=service.listBoard(map);
+        
+		String cp = req.getContextPath();
+		String listUrl = cp + "/"+userId+category;
+
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+		
+		model.addAttribute("page", current_page);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+		model.addAttribute("rows", rows);
 		
 		model.addAttribute("dto", dto);
 		model.addAttribute("list", list);
 		model.addAttribute("category", category);
+		model.addAttribute("boardCount", boardCount);
+		
+		model.addAttribute("bList", bList);
 		
 		return ".blog3.category.list";
 	}
@@ -253,6 +317,7 @@ public class BlogController {
 		
 		List<Manage> list=mService.listCategory(map);
 		
+		model.addAttribute("mode", "created");
 		model.addAttribute("dto", dto);
 		model.addAttribute("list", list);
 		
@@ -275,5 +340,70 @@ public class BlogController {
 		}
 
 		return "redirect:/manage/home";
+	}
+	
+	@RequestMapping(value = "{userId}/{boardNum}")
+	public String article(
+			@PathVariable String userId,
+			@PathVariable int boardNum,
+			Model model
+			) throws Exception {
+		Manage dto=mService.readBlog(userId);
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("blogNum", dto.getBlogNum());
+		
+		List<Manage> list=mService.listCategory(map);
+		
+		map.put("userId", userId);
+		map.put("boardNum", boardNum);
+		
+		Board bDto=service.readBoard(map);
+		
+		int hitCount=service.updateHitCount(boardNum);
+
+		model.addAttribute("dto", dto);
+		model.addAttribute("list", list);
+		
+		model.addAttribute("hitCount", hitCount);
+		model.addAttribute("bDto", bDto);
+		
+		return ".blog3.category.article";
+	}
+	
+	@RequestMapping(value = "{userId}/{boardNum}/update", method = RequestMethod.GET)
+	public String updateForm(
+			@PathVariable String userId,
+			@PathVariable int boardNum,
+			Model model
+			) throws Exception {
+		Manage dto=mService.readBlog(userId);
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("blogNum", dto.getBlogNum());
+		
+		List<Manage> list=mService.listCategory(map);
+		
+		
+		map.put("userId", userId);
+		map.put("boardNum", boardNum);
+		
+		Board bDto=service.readBoard(map);
+
+		model.addAttribute("dto", dto);
+		model.addAttribute("list", list);
+		model.addAttribute("bDto", bDto);
+		model.addAttribute("mode", "update");
+		
+		return ".blog3.category.write";
+	}
+	
+	@RequestMapping(value = "{userId}/{boardNum}/delete")
+	public String deleteBoard(
+			@PathVariable String userId,
+			@PathVariable int boardNum
+			) throws Exception {
+		
+		service.deleteBoard(boardNum);
+		
+		return "redirect:/"+userId;
 	}
 }

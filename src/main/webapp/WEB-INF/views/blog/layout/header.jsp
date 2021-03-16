@@ -47,13 +47,6 @@ $(function() {
 <div class="side-back" style="display: none;">
 
 </div>
-<div class="header-top">
-   <div style="margin: 2px; margin-right: 20px;">
-        <a href="${pageContext.request.contextPath}/main" style="text-decoration: none;">
-            <span class="heylog">HEYLOG&nbsp;</span>
-       </a>
-    </div>
-</div>
 <div style="background: #8a8a8a7a;">
 	<div class="blog-header">
 	   	<div class="blog-title">

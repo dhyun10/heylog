@@ -119,15 +119,51 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public void deleteBoard(Board dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void deleteBoard(int boardNum) throws Exception {
+		try {
+			dao.deleteData("blog.deleteBoard", boardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 	}
 
 	@Override
-	public List<Board> listBoard(int categoryNum) throws Exception {
+	public List<Board> listBoard(Map<String, Object> map) throws Exception {
+		List<Board> list=null;
+		try {
+			list=dao.selectList("blog.listBoard", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public int boardCount(Map<String, Object> map) {
+		int result=0;
+		try {
+			result=dao.selectOne("blog.boardCount", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public Board readBoard(Map<String, Object> map) {
+		Board dto=null;
+		try {
+			dto=dao.selectOne("blog.readBoard", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	@Override
+	public int updateHitCount(int boardNum) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 

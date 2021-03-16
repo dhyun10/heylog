@@ -62,15 +62,49 @@
 	</delete>
 	
 	<insert id="insertBoard" parameterType="com.myblog.heylog.blog.Board">
-		insert into board(categoryNum, userId, boardNum, subject, content, hitCount, created, thumbnail, enabled)
-		values (#{categoryNum}, #{userId}, board_seq.nextval, #{subject}, #{content}, 0, sysdate, 'none', 1)
+		insert into board(categoryNum, userId, boardNum, category, subject, content, hitCount, created, thumbnail, enabled)
+		values (#{categoryNum}, #{userId}, board_seq.nextval, #{category}, #{subject}, #{content}, 0, sysdate, 'none', 1)
 	</insert>
 	
 	<select id="listBoard" resultType="com.myblog.heylog.blog.Board">
-		select userId, boardNum, subject, content, created, enabled
+		select userId, category, boardNum, subject, content, to_char(created, 'YYYY.MM.DD') created, enabled
 		from board
-		where categoryNum=#{categoryNum}
+		where userId=#{userId}
+		<if test="category!=null and category!=''">
+			and category=#{category}
+		</if>
 		order by boardNum desc
+		OFFSET #{offset} ROWS FETCH FIRST #{rows} ROWS ONLY 
 	</select>
+	
+	<select id="readBoard" resultType="com.myblog.heylog.blog.Board">
+		select boardNum, category, subject, content, to_char(created, 'YYYY.MM.DD HH24:MI') created, hitCount
+		from board
+		where boardNum=#{boardNum} and userId=#{userId}
+	</select>
+	
+	<update id="updateHitCount" parameterType="com.myblog.heylog.blog.Board">
+		update board set hitCount=hitCount+1 
+		where boardNum=#{boardNum}
+	</update>
+	
+	<select id="boardCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM board
+		where userId=#{userId}
+		<if test="category!=null and category!=''">
+			and category=#{category}
+		</if>
+	</select>
+	
+	<update id="updateBoard" parameterType="com.myblog.heylog.blog.Board">
+		update board set subject=#{subject}, content=#{content}, category=#{category}, categoryNum=#{categoryNum}
+		where boardNum=#{boardNum}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="com.myblog.heylog.blog.Board">
+		delete from board
+		where boardNum=#{boardNum}
+	</delete>
 	
 </mapper>

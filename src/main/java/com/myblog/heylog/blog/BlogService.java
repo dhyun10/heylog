@@ -21,8 +21,12 @@ public interface BlogService {
 	
 	public void insertBoard(Board dto) throws Exception;
 	public void updateBoard(Board dto) throws Exception;
-	public void deleteBoard(Board dto) throws Exception;
+	public void deleteBoard(int boardNum) throws Exception;
 	
-	public List<Board> listBoard(int categoryNum) throws Exception;
+	public List<Board> listBoard(Map<String, Object> map) throws Exception;
+	public int boardCount(Map<String, Object> map);
 	
+	public Board readBoard(Map<String, Object> map);
+	public int updateHitCount(int boardNum) throws Exception;
+
 }

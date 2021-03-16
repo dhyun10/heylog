@@ -67,7 +67,7 @@
 	</insert>
 	
 	<select id="listBoard" resultType="com.myblog.heylog.blog.Board">
-		select userId, boardNum, subject, created, enabled
+		select userId, boardNum, subject, content, created, enabled
 		from board
 		where categoryNum=#{categoryNum}
 		order by boardNum desc

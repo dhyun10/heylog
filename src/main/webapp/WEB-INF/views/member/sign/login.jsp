@@ -122,7 +122,7 @@ function findPwd() {
 					<td colspan="2"><button class="btn1" onclick="javascript:loginOk();">로그인</button></td>
 				</tr>
 				<tr>
-					<td><label><input type="checkbox"> 로그인 상태 유지</label></td>
+					<td><label><input type="checkbox" name="useCookie"> 자동 로그인</label></td>
 					<td><a href="javascript:findId();">아이디</a>/<a href="javascript:findPwd();">비밀번호 찾기</a></td>
 				</tr>
 			</table>

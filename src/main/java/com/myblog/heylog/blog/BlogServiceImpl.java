@@ -213,5 +213,54 @@ public class BlogServiceImpl implements BlogService {
 		return list;
 	}
 
+	@Override
+	public void insertBoardReply(Reply dto) throws Exception {
+		try {
+			dao.insertData("blog.insertReply", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updateBoardReply(Reply dto) throws Exception {
+		try {
+			dao.updateData("blog.updateReply", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deleteBoardReply(Reply dto) throws Exception {
+		try {
+			dao.deleteData("blog.deleteReply", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public int boardReplyCount(int boardNum) {
+		int result=0;
+		try {
+			result=dao.selectOne("blog.replyCount", boardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Reply> listBoardReply(int boardNum) throws Exception {
+		List<Reply> list=null;
+		try {
+			list=dao.selectList("blog.listBoardReply", boardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 
 }

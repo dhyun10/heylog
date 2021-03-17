@@ -139,4 +139,33 @@
 		delete from board
 		where boardNum=#{boardNum}
 	</delete>
+	
+	<insert id="insertReply" parameterType="com.myblog.heylog.blog.Reply">
+		insert into boardReply(replyNum, content, created, replyType, secretType, boardNum, userId)
+		values (reply_seq.nextval, #{content}, sysdate, #{replyType}, #{secretType}, #{boardNum}, #{userId})
+	</insert>
+	
+	<select id="listBoardReply" resultType="com.myblog.heylog.blog.Reply">
+		select replyNum, content, to_char(created, 'YYYY.MM.DD') created, replyType, secretType, r.userId, userNick 
+		from boardReply r
+		join member1 m on r.userId=m.userId
+		where boardNum=#{boardNum}
+		order by replyNum asc
+	</select>
+	
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		select NVL(COUNT(*), 0)
+		from boardReply
+		where boardNum=#{boardNum}	
+	</select>
+	
+	<update id="updateReply" parameterType="com.myblog.heylog.blog.Reply">
+		update boardReply set content=#{content}
+		where replyNum=#{replyNum}
+	</update>
+	
+	<delete id="deleteReply" parameterType="com.myblog.heylog.blog.Reply">
+		delete from boardReply
+		where replyNum=#{replyNum} and boardNum=#{boardNum}
+	</delete>
 </mapper>

@@ -31,5 +31,12 @@ public interface BlogService {
 	
 	public void insertTag(Map<String, Object> map) throws Exception;
 	public List<Board> listTag(int boardNum) throws Exception;
+	
+	public void insertBoardReply(Reply dto) throws Exception;
+	public void updateBoardReply(Reply dto) throws Exception;
+	public void deleteBoardReply(Reply dto) throws Exception;
+	
+	public int boardReplyCount(int boardNum);
+	public List<Reply> listBoardReply(int boardNum) throws Exception;
 
 }

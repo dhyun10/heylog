@@ -5,5 +5,5 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @Component
 public class HttpInterceptor extends HandlerInterceptorAdapter {
-	
+
 }

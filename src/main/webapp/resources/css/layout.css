@@ -649,17 +649,52 @@
 
 .sendReply {
 	border: 0;
-	font-size: 14px;
-	padding: 10px;
-	color: #fff;
-	background: #ff567a;
+    font-size: 14px;
+    padding: 10px;
+    color: #fff;
+    background: #ff567a;
+    vertical-align: middle;
+    margin-bottom: 10px;
+}
+
+.bReply {
+	margin: 15px 5px;
+	border-bottom: 1px solid #dadada;
+}
+
+.bReply:last-child {
+	border: 0;
+}
+
+.bReply p {
+	padding-bottom: 10px;
+}
+
+.updateText {
+	resize: none;
+    width: 500px;
+    margin-top: 5px;
+    border: 1px solid #dadada;
+    padding: 5px;
+    height: 15px;
+    font-size: 12px;
+}
+
+.answer {
+	padding: 5px;
+    resize: none;
+    border: 1px solid #dadada;
+    width: 688px;
+    height: 26px;
+    vertical-align: middle;
+    margin-bottom: 10px;
 }
 
 /* footer */
 .footer {
     width:100%;
     height:50px;
-    margin:0px auto;
+    margin:50px auto;
     text-align:center;
     background-color: #fff;
     color: white;

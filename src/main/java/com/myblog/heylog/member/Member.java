@@ -11,6 +11,7 @@ public class Member {
 	private String email, email1, email2;
 	private String birth, year, month, day;
 	
+	private boolean userCookie;
 	private String userkey;
 	
 	public int getUserNum() {
@@ -126,6 +127,12 @@ public class Member {
 	}
 	public void setUserNick(String userNick) {
 		this.userNick = userNick;
+	}
+	public boolean isUserCookie() {
+		return userCookie;
+	}
+	public void setUserCookie(boolean userCookie) {
+		this.userCookie = userCookie;
 	}
 
 }

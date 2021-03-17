@@ -428,4 +428,82 @@ public class BlogController {
 		
 		return "redirect:/"+userId;
 	}
+	
+	@RequestMapping("{userId}/{boardNum}/insertReply")
+	@ResponseBody
+	public Map<String, Object> insertBoardReply(
+			@PathVariable String userId,
+			HttpSession session,
+			Reply dto
+			) throws Exception {
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		dto.setUserId(info.getUserId());
+		String state="true";
+		
+		try {
+			service.insertBoardReply(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			state="false";
+		}
+		Map<String, Object> model=new HashMap<String, Object>();
+		
+		model.put("state", state);
+		
+		return model;
+	}
+	
+	@RequestMapping("{userId}/{boardNum}/listReply")
+	public String listReply(
+			@PathVariable String userId,
+			@PathVariable int boardNum,
+			Model model
+			) throws Exception {
+		List<Reply> list=service.listBoardReply(boardNum);
+		
+		model.addAttribute("replyList", list);
+				
+		return "blog/category/reply";
+	}
+	
+	@RequestMapping("{userId}/{boardNum}/updateReply")
+	@ResponseBody
+	public Map<String, Object> updateReply(
+			Reply dto
+			) {
+		String state="true";
+		
+		try {
+			service.updateBoardReply(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			state="false";
+		}
+		Map<String, Object> model=new HashMap<String, Object>();
+		
+		model.put("state", state);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "{userId}/{boardNum}/deleteReply")
+	@ResponseBody
+	public Map<String, Object> deleteReply(
+			Reply dto
+			) throws Exception {
+		String state="true";
+		
+		try {
+			service.deleteBoardReply(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			state="false";
+		}
+		Map<String, Object> model=new HashMap<>();
+		
+		model.put("state", state);
+		
+		return model;
+	}
+	
 }

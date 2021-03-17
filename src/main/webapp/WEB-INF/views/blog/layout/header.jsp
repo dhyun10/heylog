@@ -36,6 +36,7 @@ $(function() {
 					<a href="${pageContext.request.contextPath}/${sessionScope.member.userId}/board/write">글쓰기</a>
 				</c:if>
 				<c:if test="${not empty sessionScope.member}">
+					<a href="${pageContext.request.contextPath}/${sessionScope.member.userId}">내 블로그</a>
 					<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
 				</c:if>
 				<c:if test="${empty sessionScope.member}">

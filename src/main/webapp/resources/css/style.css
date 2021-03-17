@@ -180,3 +180,21 @@ textarea:focus, input:focus{
 	font-weight: bold;
 	color: #fff;
 }
+
+.hashTagInput {
+	padding: 5px;
+    font-size: 13px;
+    width: 150px;
+    border: 1px solid #dadada;
+    color: #585858;
+}
+
+.hashTag {
+	padding: 5px 10px;
+    font-size: 13px;
+}
+
+.tagDel {
+	padding-left: 5px;
+    font-weight: bold;
+}

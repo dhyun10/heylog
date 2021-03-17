@@ -310,7 +310,7 @@ $(function() {
 			         	<div class="info" style="border-bottom: 2px solid; padding: 10px; font-size: 20px; font-weight: bold;">        		
 			         		<c:if test="${vo.secretType==1}">
 								<i class="fas fa-lock"></i>
-							</c:if>${vo.userNick}&nbsp;<span style="font-size: 14px; font-weight: normal;">${vo.created}</span>
+							</c:if><a href="${pageContext.request.contextPath}/${vo.userId}">${vo.userNick}</a>&nbsp;<span style="font-size: 14px; font-weight: normal;">${vo.created}</span>
 			         		<div style="float: right;">
 				         		<c:if test="${sessionScope.member.userId==vo.userId}">
 				         				<button class="btn5 updateGuest" data-guestNum="${vo.guestNum}" data-secretType="${vo.secretType}">수정</button>

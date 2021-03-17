@@ -1,5 +1,6 @@
 package com.myblog.heylog.blog;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +107,25 @@ public class BlogServiceImpl implements BlogService {
 	@Override
 	public void insertBoard(Board dto) throws Exception {
 		try {
+			int b_seq=dao.selectOne("blog.board_seq");
+			dto.setBoardNum(b_seq);
+			
 			dao.insertData("blog.insertBoard", dto);
+			
+			Map<String, Object> map=new HashMap<String, Object>();
+			String [] tags=dto.getTag().split(",");
+
+			
+			for(int i=0; i<tags.length; i++) {
+				int seq=dao.selectOne("blog.tag_seq");
+				
+				map.put("tagNum", seq);
+				map.put("tag", tags[i]);
+				map.put("boardNum", b_seq);
+				
+				insertTag(map);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -114,8 +133,11 @@ public class BlogServiceImpl implements BlogService {
 
 	@Override
 	public void updateBoard(Board dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			dao.updateData("blog.updateBoard", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -162,8 +184,33 @@ public class BlogServiceImpl implements BlogService {
 
 	@Override
 	public int updateHitCount(int boardNum) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		try {
+			result=dao.updateData("blog.updateHitCount", boardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public void insertTag(Map<String, Object> map) throws Exception {
+		try {
+			dao.insertData("blog.insertTag", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<Board> listTag(int boardNum) throws Exception {
+		List<Board> list=null;
+		try {
+			list=dao.selectList("blog.readTag", boardNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 

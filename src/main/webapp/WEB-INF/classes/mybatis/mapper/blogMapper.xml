@@ -61,26 +61,58 @@
 		where replyNum=#{replyNum}
 	</delete>
 	
+	<select id="board_seq" resultType="Integer">
+		SELECT board_seq.NEXTVAL FROM dual
+	</select>
+	
+	<select id="tag_seq" resultType="Integer">
+		SELECT tag_seq.NEXTVAL FROM dual
+	</select>
+	
 	<insert id="insertBoard" parameterType="com.myblog.heylog.blog.Board">
-		insert into board(categoryNum, userId, boardNum, category, subject, content, hitCount, created, thumbnail, enabled)
-		values (#{categoryNum}, #{userId}, board_seq.nextval, #{category}, #{subject}, #{content}, 0, sysdate, 'none', 1)
-	</insert>
+		insert into board(categoryNum, userId, boardNum, subject, content, hitCount, created, thumbnail, enabled)
+		values (#{categoryNum}, #{userId}, #{boardNum}, #{subject}, #{content}, 0, sysdate, 'none', 1)
+	</insert>	
+	
+	<update id="insertTag" parameterType="map">
+		<![CDATA[
+		insert all
+		into tag(tagNum, tag) values (#{tagNum}, #{tag})
+		into board_tag(boardNum, tagNum, created) values (#{boardNum}, #{tagNum}, sysdate)
+		select * from sys.dual
+		]]>
+	</update>
 	
 	<select id="listBoard" resultType="com.myblog.heylog.blog.Board">
-		select userId, category, boardNum, subject, content, to_char(created, 'YYYY.MM.DD') created, enabled
-		from board
+		select userId, c.category, boardNum, subject, content, to_char(created, 'YYYY.MM.DD') created, b.enabled
+		from board b
+		join category c on c.categoryNum=b.categoryNum
 		where userId=#{userId}
 		<if test="category!=null and category!=''">
-			and category=#{category}
+			and c.category=#{category}
 		</if>
 		order by boardNum desc
 		OFFSET #{offset} ROWS FETCH FIRST #{rows} ROWS ONLY 
 	</select>
 	
 	<select id="readBoard" resultType="com.myblog.heylog.blog.Board">
-		select boardNum, category, subject, content, to_char(created, 'YYYY.MM.DD HH24:MI') created, hitCount
-		from board
+		select boardNum, c.category, b.categoryNum, subject, content, to_char(created, 'YYYY.MM.DD HH24:MI') created, hitCount
+		from board b
+		join category c on c.categoryNum=b.categoryNum
 		where boardNum=#{boardNum} and userId=#{userId}
+	</select>
+	
+	<select id="readTag" resultType="com.myblog.heylog.blog.Board">
+		select t.tag, t.tagNum, b.boardNum 
+		from board b
+		left outer join (
+		    select boardNum, tagNum from board_tag
+		) tb on b.boardNum=tb.boardNum
+		left outer join (
+		    select tagNum, tag from tag
+		) t on t.tagNum=tb.tagnum
+		where b.boardNum=#{boardNum}
+		order by t.tagNum desc
 	</select>
 	
 	<update id="updateHitCount" parameterType="com.myblog.heylog.blog.Board">
@@ -90,15 +122,16 @@
 	
 	<select id="boardCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
-		FROM board
+		FROM board b
+		join category c on c.categoryNum=b.categoryNum
 		where userId=#{userId}
 		<if test="category!=null and category!=''">
-			and category=#{category}
+			and c.category=#{category}
 		</if>
 	</select>
 	
 	<update id="updateBoard" parameterType="com.myblog.heylog.blog.Board">
-		update board set subject=#{subject}, content=#{content}, category=#{category}, categoryNum=#{categoryNum}
+		update board set subject=#{subject}, content=#{content}, categoryNum=#{categoryNum}
 		where boardNum=#{boardNum}
 	</update>
 	
@@ -106,5 +139,4 @@
 		delete from board
 		where boardNum=#{boardNum}
 	</delete>
-	
 </mapper>

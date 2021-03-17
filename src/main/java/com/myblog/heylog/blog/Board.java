@@ -1,7 +1,7 @@
 package com.myblog.heylog.blog;
 
 public class Board {
-	private int categoryNum, boardNum;
+	private int categoryNum, boardNum, tagNum;
 	private String userId, category;
 	
 	private String subject;
@@ -77,6 +77,12 @@ public class Board {
 	}
 	public void setEnabled(String enabled) {
 		this.enabled = enabled;
+	}
+	public int getTagNum() {
+		return tagNum;
+	}
+	public void setTagNum(int tagNum) {
+		this.tagNum = tagNum;
 	}
 	
 	

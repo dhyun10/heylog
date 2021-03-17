@@ -28,5 +28,8 @@ public interface BlogService {
 	
 	public Board readBoard(Map<String, Object> map);
 	public int updateHitCount(int boardNum) throws Exception;
+	
+	public void insertTag(Map<String, Object> map) throws Exception;
+	public List<Board> listTag(int boardNum) throws Exception;
 
 }

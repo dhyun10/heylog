@@ -317,7 +317,7 @@ public class BlogController {
 		
 		List<Manage> list=mService.listCategory(map);
 		
-		model.addAttribute("mode", "created");
+		model.addAttribute("mode", "write");
 		model.addAttribute("dto", dto);
 		model.addAttribute("list", list);
 		
@@ -331,10 +331,12 @@ public class BlogController {
 			Board dto
 			) throws Exception {
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
+	
 		
 		try {
 			dto.setUserId(info.getUserId());
 			service.insertBoard(dto);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -359,12 +361,13 @@ public class BlogController {
 		
 		Board bDto=service.readBoard(map);
 		
-		int hitCount=service.updateHitCount(boardNum);
+		service.updateHitCount(boardNum);
+		List<Board> tagList=service.listTag(boardNum);
 
 		model.addAttribute("dto", dto);
 		model.addAttribute("list", list);
 		
-		model.addAttribute("hitCount", hitCount);
+		model.addAttribute("tList", tagList);
 		model.addAttribute("bDto", bDto);
 		
 		return ".blog3.category.article";
@@ -382,18 +385,37 @@ public class BlogController {
 		
 		List<Manage> list=mService.listCategory(map);
 		
-		
 		map.put("userId", userId);
 		map.put("boardNum", boardNum);
-		
+		List<Board> tagList=service.listTag(boardNum);
+
 		Board bDto=service.readBoard(map);
 
 		model.addAttribute("dto", dto);
 		model.addAttribute("list", list);
 		model.addAttribute("bDto", bDto);
 		model.addAttribute("mode", "update");
+		model.addAttribute("tList", tagList);
+		
 		
 		return ".blog3.category.write";
+	}
+	
+	@RequestMapping(value = "{userId}/{boardNum}/update", method = RequestMethod.POST)
+	public String updateSubmit(
+			@PathVariable String userId,
+			@PathVariable int boardNum,
+			Board dto
+			) throws Exception {		
+		try {
+			System.out.println(boardNum);
+			dto.setBoardNum(boardNum);
+			service.updateBoard(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:/"+userId+"/"+boardNum;
 	}
 	
 	@RequestMapping(value = "{userId}/{boardNum}/delete")

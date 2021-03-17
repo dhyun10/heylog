@@ -30,7 +30,7 @@
 </div>
 	
 <div class="container">
-    <tiles:insertAttribute name="body"/>
+    <tiles:insertAttribute name="body" ignore="true"/>
 </div>
 
 <div class="footer">

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myblog.heylog.blog.Blog;
 import com.myblog.heylog.blog.BlogService;
+import com.myblog.heylog.blog.Reply;
 import com.myblog.heylog.common.MyUtil;
 import com.myblog.heylog.member.SessionInfo;
 
@@ -190,6 +191,66 @@ public class ManageController {
 		String state="true";
 		try {
 			service.updateGuestSecret(dto);	
+		} catch (Exception e) {
+			state="false";
+			e.printStackTrace();
+		}
+
+		return state;
+	}
+	
+	@RequestMapping(value = "reply")
+	public String reply(
+			@RequestParam(value="page", defaultValue="1") int current_page,
+			@RequestParam(value = "rows", defaultValue = "10") int rows,
+			HttpServletRequest req,
+			HttpSession session,
+			Model model
+			) throws Exception {
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		Map<String, Object> map=new HashMap<String, Object>();
+
+		int total_page;
+		int dataCount;
+		
+		map.put("userId", info.getUserId());
+		
+		dataCount=service.replyCount(info.getUserId());
+		total_page=myUtil.pageCount(rows, dataCount);
+		
+		if (total_page < current_page)
+			current_page = total_page;
+
+        int offset = (current_page-1) * rows;
+		if(offset < 0) offset = 0;
+        map.put("offset", offset);
+        map.put("rows", rows);
+		
+		List<Reply> list=service.listReply(map);
+		
+		String cp = req.getContextPath();
+		String listUrl = cp + "/manage/reply";
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+		
+		model.addAttribute("list", list);
+
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("page", current_page);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+		model.addAttribute("rows", rows);
+		
+		return ".four.manage.blog.reply";
+	}
+	
+	@RequestMapping(value = "updateReplySecret", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateReplySecret(
+			Reply dto
+			) throws Exception {
+		String state="true";
+		try {
+			service.updateReplySecret(dto);	
 		} catch (Exception e) {
 			state="false";
 			e.printStackTrace();

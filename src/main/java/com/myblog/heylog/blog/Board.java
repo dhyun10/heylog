@@ -11,6 +11,7 @@ public class Board {
 	private int hitCount;
 	private String created;
 	private String enabled;
+	private int boardLikeCount;	
 	
 	public int getCategoryNum() {
 		return categoryNum;
@@ -83,6 +84,12 @@ public class Board {
 	}
 	public void setTagNum(int tagNum) {
 		this.tagNum = tagNum;
+	}
+	public int getBoardLikeCount() {
+		return boardLikeCount;
+	}
+	public void setBoardLikeCount(int boardLikeCount) {
+		this.boardLikeCount = boardLikeCount;
 	}
 	
 	

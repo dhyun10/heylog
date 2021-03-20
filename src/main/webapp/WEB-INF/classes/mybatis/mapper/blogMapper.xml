@@ -112,7 +112,7 @@
 		    select tagNum, tag from tag
 		) t on t.tagNum=tb.tagnum
 		where b.boardNum=#{boardNum}
-		order by t.tagNum desc
+		order by t.tagNum asc
 	</select>
 	
 	<update id="updateHitCount" parameterType="com.myblog.heylog.blog.Board">
@@ -140,17 +140,23 @@
 		where boardNum=#{boardNum}
 	</delete>
 	
+	<select id="reply_seq" resultType="Integer">
+		SELECT reply_seq.NEXTVAL FROM dual
+	</select>
+	
 	<insert id="insertReply" parameterType="com.myblog.heylog.blog.Reply">
-		insert into boardReply(replyNum, content, created, replyType, secretType, boardNum, userId)
-		values (reply_seq.nextval, #{content}, sysdate, #{replyType}, #{secretType}, #{boardNum}, #{userId})
+		insert into boardReply(replyNum, content, created, replyType, secretType, boardNum, userId, grpNum, grpOrd, depth)
+		values (#{replyNum}, #{content}, sysdate, #{replyType}, #{secretType}, #{boardNum}, #{userId}, #{replyNum}, 0, 0)
 	</insert>
 	
 	<select id="listBoardReply" resultType="com.myblog.heylog.blog.Reply">
-		select replyNum, content, to_char(created, 'YYYY.MM.DD') created, replyType, secretType, r.userId, userNick 
+		select replyNum, content, to_char(created, 'YYYY.MM.DD') created, replyType, secretType, r.userId, m.userNick, thumbnail,
+		grpNum, grpOrd, depth
 		from boardReply r
 		join member1 m on r.userId=m.userId
+        join blog b on b.userId=r.userId
 		where boardNum=#{boardNum}
-		order by replyNum asc
+		order by grpNum asc, grpOrd asc
 	</select>
 	
 	<select id="replyCount" parameterType="map" resultType="Integer">
@@ -168,4 +174,53 @@
 		delete from boardReply
 		where replyNum=#{replyNum} and boardNum=#{boardNum}
 	</delete>
+	
+	<insert id="insertAnswer" parameterType="com.myblog.heylog.blog.Reply">
+		insert into boardReply(replyNum, content, created, replyType, secretType, boardNum, userId, grpNum, grpOrd, depth)
+		values (#{replyNum}, #{content}, sysdate, #{replyType}, #{secretType}, #{boardNum}, #{userId}, #{grpNum}, #{grpOrd}, #{depth}+1)
+	</insert>
+	
+	<select id="replyMinSort" parameterType="com.myblog.heylog.blog.Reply" resultType="Integer">
+		<![CDATA[
+		select NVL(MIN(grpOrd), 0) from boardReply
+		where grpNum=#{grpNum} and grpOrd>#{grpOrd} and depth <=#{depth}
+		]]>
+	</select>
+	
+	<select id="replyMaxSort" parameterType="com.myblog.heylog.blog.Reply" resultType="Integer">
+		<![CDATA[
+		select NVL(MAX(grpOrd),0)+1 from boardReply
+		where grpNum=#{grpNum}
+		]]>
+	</select>
+	
+	<update id="replyUpdateSort" parameterType="com.myblog.heylog.blog.Reply">
+		<![CDATA[
+		update boardReply set grpOrd=grpOrd+1
+		where grpNum=#{grpNum} and grpOrd>=#{grpOrd}
+		]]>
+	</update>
+	
+	<select id="replyUser" resultType="String">
+		select NVL(Max(userNick), 'X') replyUser from member1 m
+		join boardReply r on r.userId=m.userId
+		where replyNum=#{replyType}
+	</select>
+	
+	<insert id="insertBoardLike" parameterType="com.myblog.heylog.blog.Board">
+		insert into boardLike(boardNum, userId) values (#{boardNum}, #{userId})
+	</insert>
+	
+	<delete id="deleteBoardLike" parameterType="com.myblog.heylog.blog.Board">
+		delete from boardLike where boardNum=#{boardNum} and userId=#{userId}
+	</delete>
+	
+	<select id="boardLikeCount" parameterType="com.myblog.heylog.blog.Board">
+		select NVL(COUNT(*), 0) from boardLike where boardNum=#{boardNum}
+	</select>
+	
+	<select id="likeUser" parameterType="com.myblog.heylog.blog.Board">
+		select NVL(COUNT(*), 0) from boardLike where boardNum=#{boardNum} and userId=#{userId}
+	</select>
+	
 </mapper>

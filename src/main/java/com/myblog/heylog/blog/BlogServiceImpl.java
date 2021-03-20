@@ -216,6 +216,9 @@ public class BlogServiceImpl implements BlogService {
 	@Override
 	public void insertBoardReply(Reply dto) throws Exception {
 		try {
+			int seq=dao.selectOne("blog.reply_seq");
+			dto.setReplyNum(seq);
+			
 			dao.insertData("blog.insertReply", dto);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -240,6 +243,31 @@ public class BlogServiceImpl implements BlogService {
 		}
 	}
 
+
+	@Override
+	public void insertReplyAnswer(Reply dto) throws Exception {
+		try {
+			int seq=dao.selectOne("blog.reply_seq");
+			dto.setReplyNum(seq);
+			
+			int min=dao.selectOne("blog.replyMinSort", dto);
+			dto.setGrpOrd(min);
+			
+			if(min != 0) {
+				dao.updateData("blog.replyUpdateSort", dto);	
+				dao.insertData("blog.insertAnswer", dto);		
+			} else {
+				int max=dao.selectOne("blog.replyMaxSort", dto);
+				dto.setGrpOrd(max);
+				dao.insertData("blog.insertAnswer", dto);	
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	@Override
 	public int boardReplyCount(int boardNum) {
 		int result=0;
@@ -256,11 +284,51 @@ public class BlogServiceImpl implements BlogService {
 		List<Reply> list=null;
 		try {
 			list=dao.selectList("blog.listBoardReply", boardNum);
+			
+			for(int i=0; i<list.size(); i++) {
+				String user=dao.selectOne("blog.replyUser", list.get(i).getReplyType());
+				list.get(i).setReplyUser(user);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
+	
+	@Override
+	public void insertBoardLike(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void deleteBoardLike(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void likeUser(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void likeCount(int boardNum) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Reply listReplyUser(int replyType) throws Exception {
+		Reply user=null;
+		try {
+			user=dao.selectOne("blog.replyUser", replyType);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
 
 }

@@ -21,7 +21,7 @@ $(function() {
 		<div class="menu-list">
 			<ul>
 				<c:forEach var="vo" items="${list}">
-				<li>· <a href="${pageContext.request.contextPath}/${dto.userId}/category/${vo.category}">${vo.category}</a> <span>&nbsp;(0)</span></li>
+				<li>· <a href="${pageContext.request.contextPath}/${dto.userId}/category/${vo.category}">${vo.category}</a></li>
 				</c:forEach>
 			</ul>
 		</div>

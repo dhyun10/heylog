@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myblog.heylog.blog.Blog;
+import com.myblog.heylog.blog.Reply;
 import com.myblog.heylog.common.FileManager;
 import com.myblog.heylog.common.dao.CommonDAO;
 
@@ -94,6 +95,37 @@ public class ManageServiceImpl implements ManageService {
 	public void updateGuestSecret(Blog dto) throws Exception {
 		try {
 			dao.updateData("manage.updateGuestSecretType", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<Reply> listReply(Map<String, Object> map) throws Exception {
+		List<Reply> list=null;
+		try {
+			list=dao.selectList("manage.listReply", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public int replyCount(String userId) {
+		int result=0;
+		try {
+			result=dao.selectOne("manage.replyCount", userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public void updateReplySecret(Reply dto) throws Exception {
+		try {
+			dao.updateData("manage.updateReplySecret", dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

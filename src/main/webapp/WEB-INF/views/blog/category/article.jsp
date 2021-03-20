@@ -190,9 +190,40 @@ $(function() {
 
 $(function() {
 	$("body").on("click", ".answerReply", function() {
-		$(this).closest("p").next("div").css("display", "");
+		$(this).closest("div").next("div").css("display", "");
 		$(this).text("취소");
 		$(this).attr("class", "replybtn1 cancel");
+	});
+	
+	$("body").on("click", ".sendAnswer", function() {
+		var content=$(this).prev().prev().prev("textarea").val().trim();
+
+		var replyNum=$(this).attr("data-replyNum");
+		var secretType=$(this).prev().prev("input:checkbox").is(":checked");
+		
+		var $tb=$(this).closest("div").prev("div").find("p");
+		var grpNum=$tb.find("#grpNum").val();
+		var grpOrd=$tb.find("#grpOrd").val();
+		var depth=$tb.find("#depth").val();
+	
+		content=encodeURIComponent(content);
+		
+		var url=q+"insertAnswer";
+		var query="boardNum="+boardNum+"&content="+content+"&secretType="+secretType+
+			"&replyType="+replyNum+"&grpNum="+grpNum+"&grpOrd="+grpOrd+"&depth="+depth;
+		
+		var fn=function(data) {
+			var state=data.state;
+			
+			if(state==="true") {
+				alert("댓글이 성공적으로 등록되었습니다.");
+				listReply(boardNum);
+			} else {
+				alert("댓글이 등록되지 않았습니다...");
+			}
+		}
+
+		ajaxJSON(url, "post", query, fn);
 	});
 	
 	$("body").on("click", ".cancel", function() {
@@ -220,7 +251,7 @@ $(function() {
     	</div>
     	<div class="article_btn">
     		<i class="far fa-heart"> 추천 </i> 
-    		<i class="fas fa-share-alt"> </i> 
+    		<i class="far fa-copy"></i>
     		<i class="fas fa-plus"> </i>
     		<span style="display: none; margin-left: 10px;">
 			<c:if test="${dto.userId==sessionScope.member.userId}">

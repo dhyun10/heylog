@@ -50,4 +50,46 @@
 		update guest set secretType=#{secretType}
 		where blogNum=#{blogNum} and guestNum=#{guestNum}
 	</update>
+	
+	<select id="listReply" resultType="com.myblog.heylog.blog.Reply">
+		select b.boardNum, replyNum, b.subject, c.category, content, to_char(created, 'YYYY.MM.DD HH24:MI') created, 
+		replyType, secretType, r.userId, userNick 
+		from boardReply r
+		left outer join (
+		    select userId, userNick from member1
+		) m on r.userId=m.userId
+		left outer join (
+		    select boardNum, categoryNum, subject from board
+		) b on r.boardNum=b.boardNum
+		left outer join (
+		    select categoryNum, category, blogNum from category
+		) c on c.categoryNum=b.categoryNum
+		left outer join (
+		    select blogNum, userId from blog
+		) g on g.blogNum=c.blogNum
+		where g.userId=#{userId}
+	</select>
+	
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		select NVL(COUNT(*), 0)
+		from boardReply r
+		left outer join (
+		    select userId, userNick from member1
+		) m on r.userId=m.userId
+		left outer join (
+		    select boardNum, categoryNum from board
+		) b on r.boardNum=b.boardNum
+		left outer join (
+		    select categoryNum, blogNum from category
+		) c on c.categoryNum=b.categoryNum
+		left outer join (
+		    select blogNum, userId from blog
+		) g on g.blogNum=c.blogNum
+		where g.userId=#{userId}
+	</select>
+	
+	<update id="updateReplySecret" parameterType="com.myblog.heylog.blog.Reply">
+		update boardReply set secretType=#{secretType}
+		where blogNum=#{blogNum} and replyNum=#{replyNum}
+	</update>
 </mapper>

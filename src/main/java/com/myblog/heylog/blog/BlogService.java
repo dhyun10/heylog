@@ -36,7 +36,15 @@ public interface BlogService {
 	public void updateBoardReply(Reply dto) throws Exception;
 	public void deleteBoardReply(Reply dto) throws Exception;
 	
+	public void insertReplyAnswer(Reply dto) throws Exception;
+	
 	public int boardReplyCount(int boardNum);
 	public List<Reply> listBoardReply(int boardNum) throws Exception;
+	public Reply listReplyUser(int replyType) throws Exception;
+	
+	public void insertBoardLike(Map<String, Object> map) throws Exception;
+	public void deleteBoardLike(Map<String, Object> map) throws Exception;
+	public void likeUser(Map<String, Object> map) throws Exception;
+	public void likeCount(int boardNum) throws Exception;
 
 }

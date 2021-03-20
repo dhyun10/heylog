@@ -45,7 +45,7 @@
 			</div>
 			<div><i class="far fa-comment-dots"></i> 댓글 · 방명록
 				<ul>
-					<li>댓글 관리</li>
+					<li><a href="${pageContext.request.contextPath}/manage/reply">댓글 관리</a></li>
 				</ul>
 				<ul>
 					<li><a href="${pageContext.request.contextPath}/manage/guestbook">방명록 관리</a></li>

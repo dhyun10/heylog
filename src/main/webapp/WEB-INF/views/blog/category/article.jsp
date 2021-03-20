@@ -190,7 +190,7 @@ $(function() {
 
 $(function() {
 	$("body").on("click", ".answerReply", function() {
-		$(this).closest("div").next("div").css("display", "");
+		$(this).closest("div").next("div").css("display", "");		
 		$(this).text("취소");
 		$(this).attr("class", "replybtn1 cancel");
 	});

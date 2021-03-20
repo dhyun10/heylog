@@ -241,6 +241,7 @@ public class BoardController {
 		List<Reply> list=service.listBoardReply(boardNum);
 		
 		model.addAttribute("replyList", list);
+		model.addAttribute("userId", userId);
 				
 		return "blog/category/reply";
 	}

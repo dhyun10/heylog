@@ -215,12 +215,8 @@
 		delete from boardLike where boardNum=#{boardNum} and userId=#{userId}
 	</delete>
 	
-	<select id="boardLikeCount" parameterType="com.myblog.heylog.blog.Board">
-		select NVL(COUNT(*), 0) from boardLike where boardNum=#{boardNum}
-	</select>
-	
-	<select id="likeUser" parameterType="com.myblog.heylog.blog.Board">
-		select NVL(COUNT(*), 0) from boardLike where boardNum=#{boardNum} and userId=#{userId}
+	<select id="likeUser" resultType="Integer">
+		select NVL(COUNT(*), 0) from boardLike where boardNum=#{boardNum} and userId=#{userId, jdbcType=VARCHAR}
 	</select>
 	
 </mapper>

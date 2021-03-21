@@ -6,6 +6,7 @@
 
 var q="${pageContext.request.contextPath}/${dto.userId}/${bDto.boardNum}/";
 var boardNum="${bDto.boardNum}";
+var userId="${sessionScope.member.userId}";
 
 $(function() {
 	$("body").on("click", ".fa-plus", function() {
@@ -81,6 +82,14 @@ function listReply(boardNum) {
 }
 
 $(function() {
+	$("body").on("click", ".article_reply", function() {
+		if(userId=='') {
+			alert("댓글을 입력하시려면 로그인 해주세요!");
+			$(this).blur();
+			return;
+		}
+	});
+	
 	$("body").on("click", ".sendReply", function() {
 		var $tb=$(this).closest("div").prev().prev("textarea");
 		var content=$tb.val().trim();
@@ -230,6 +239,52 @@ $(function() {
 		listReply(boardNum);
 	});
 });
+
+$(function() {
+	$("body").on("click", ".boardLike", function() {
+		if(userId=='') {
+			alert("글을 추천하려면 로그인해주세요.");
+			return;
+		} else if (userId=="${dto.userId}") {
+			alert("본인의 글은 추천할 수 없습니다.");
+			return;
+		}
+		
+		$(this).attr("class", "fas fa-heart boardUnlike");
+		$(".boardUnlike").css("color", "red");
+		
+		var url=q+"insertBoardLike";
+		var query="";
+		
+		var fn=function(data) {
+			var state=data.state;
+			
+			if(state=="true") {
+				alert("글을 추천하였습니다!");
+			}
+		}
+				
+		ajaxJSON(url, "post", query, fn);
+	});
+	
+	$("body").on("click", ".boardUnlike", function() {
+		$(this).attr("class", "far fa-heart boardLike");
+		$(".boardLike").css("color", ""); 
+		
+		var url=q+"deleteBoardLike";
+		var query="";
+		
+		var fn=function(data) {
+			var state=data.state;
+			
+			if(state=="true") {
+				alert("추천을 취소했습니다!");
+			}
+		}
+		
+		ajaxJSON(url, "post", query, fn);
+	});
+});
 </script>
 
 <div class="body-container">
@@ -250,7 +305,13 @@ $(function() {
     		</c:if>
     	</div>
     	<div class="article_btn">
-    		<i class="far fa-heart"> 추천 </i> 
+    		<c:if test="${likeUser==0}">
+	    		<i class="far fa-heart boardLike"></i>
+    		</c:if>
+    		<c:if test="${likeUser==1}">
+    			<i class="fas fa-heart boardUnlike" style="color: red;"></i>
+    		</c:if>
+    		<span>&nbsp;추천</span> 
     		<i class="far fa-copy"></i>
     		<i class="fas fa-plus"> </i>
     		<span style="display: none; margin-left: 10px;">
@@ -269,14 +330,7 @@ $(function() {
     <div style="max-width: 800px; margin: 80px auto;">
     	<p style="font-size: 16px; font-weight: bold;">댓글</p>
 		<div id="replyLayout" style="margin: 15px 5px; font-size: 14px;"></div>
-   		<c:choose>
-   			<c:when test="${sessionScope.member.userId!=null}">
-		   		<textarea class="article_reply" placeholder="댓글을 입력하세요." name="content"></textarea>	
-   			</c:when>
-   			<c:otherwise>
-   				<textarea class="article_reply" placeholder="댓글을 입력하시려면 로그인 해주세요." readonly="readonly"></textarea>
-   			</c:otherwise>
-   		</c:choose>
+		   	<textarea class="article_reply" placeholder="댓글을 입력하세요." name="content"></textarea>	
    		<div>
    			<button style="float: left;" class="btn4">목록으로</button>
    		</div>

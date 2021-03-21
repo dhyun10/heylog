@@ -298,26 +298,32 @@ public class BlogServiceImpl implements BlogService {
 	
 	@Override
 	public void insertBoardLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			dao.insertData("blog.insertBoardLike", map);
+		} catch (NullPointerException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void deleteBoardLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			dao.deleteData("blog.deleteBoardLike", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void likeUser(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void likeCount(int boardNum) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public int likeUser(Map<String, Object> map) throws Exception {
+		int result=0;
+		try {
+			result=dao.selectOne("blog.likeUser", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override

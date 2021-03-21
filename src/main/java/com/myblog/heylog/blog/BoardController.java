@@ -127,6 +127,7 @@ public class BoardController {
 	public String article(
 			@PathVariable String userId,
 			@PathVariable int boardNum,
+			HttpSession session,
 			Model model
 			) throws Exception {
 		Manage dto=mService.readBlog(userId);
@@ -140,6 +141,19 @@ public class BoardController {
 		
 		Board bDto=service.readBoard(map);
 		
+		int like=0;
+
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		
+		if(info!=null) {
+			Map<String, Object> likeMap=new HashMap<String, Object>();
+			String likeUser=info.getUserId();
+			
+			likeMap.put("boardNum", boardNum);
+			likeMap.put("userId", likeUser);
+			like=service.likeUser(likeMap);
+		}
+		
 		service.updateHitCount(boardNum);
 		List<Board> tagList=service.listTag(boardNum);
 
@@ -148,6 +162,7 @@ public class BoardController {
 		
 		model.addAttribute("tList", tagList);
 		model.addAttribute("bDto", bDto);
+		model.addAttribute("likeUser", like);
 		
 		return ".blog3.category.article";
 	}
@@ -309,5 +324,56 @@ public class BoardController {
 	model.put("state", state);
 	
 	return model;
+	}
+	
+	@RequestMapping(value = "{userId}/{boardNum}/insertBoardLike")
+	@ResponseBody
+	public Map<String, Object> insertBoardLike(
+			@PathVariable int boardNum,
+			HttpSession session
+			) {
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("userId", info.getUserId());
+		map.put("boardNum", boardNum);
+		
+		String state="true";
+		
+		try {
+			service.insertBoardLike(map);
+		} catch (Exception e) {
+			state="false";
+			e.printStackTrace();
+		}
+		
+		Map<String, Object> model=new HashMap<String, Object>();
+		model.put("state", state);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "{userId}/{boardNum}/deleteBoardLike")
+	@ResponseBody
+	public Map<String, Object> deleteBoardLike(
+			@PathVariable int boardNum,
+			HttpSession session
+			) {
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("userId", info.getUserId());
+		map.put("boardNum", boardNum);
+		
+		String state="true";
+		
+		try {
+			service.deleteBoardLike(map);
+		} catch (Exception e) {
+			state="false";
+			e.printStackTrace();
+		}
+
+		Map<String, Object> model=new HashMap<String, Object>();
+		model.put("state", state);
+		return model;
 	}
 }

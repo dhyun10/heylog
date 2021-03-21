@@ -44,7 +44,6 @@ public interface BlogService {
 	
 	public void insertBoardLike(Map<String, Object> map) throws Exception;
 	public void deleteBoardLike(Map<String, Object> map) throws Exception;
-	public void likeUser(Map<String, Object> map) throws Exception;
-	public void likeCount(int boardNum) throws Exception;
+	public int likeUser(Map<String, Object> map) throws Exception;
 
 }

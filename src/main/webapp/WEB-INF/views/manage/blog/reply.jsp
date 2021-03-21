@@ -33,6 +33,10 @@ $(function() {
 			$("input[name=chk]").prop("checked", false);
 		}
 	});
+	
+	$("body").on("click", ".check", function() {
+		$(".allCheck").prop("checked", false);
+	});
 });
 
 $(function() {
@@ -46,8 +50,43 @@ $(function() {
 });
 
 $(function() {
+	$("body").on("click", ".deleteAll", function() {
+		if(! confirm("선택하신 댓글을 삭제하시겠습니까?")) {
+			return;
+		}
+		
+		var checkArr=new Array();
+		var boardArr=new Array();
+		
+		$("input[name='chk']:checked").each(function() {
+			checkArr.push($(this).attr("data-replyNum"));
+			boardArr.push($(this).attr("data-boardNum"));
+		});
+		
+		for(var i=0; i<checkArr.length; i++) {
+			var boardNum=boardArr[i];
+			var replyNum=checkArr[i];
+			var userId="${sessionScope.member.userId}";
+			
+			var url="${pageContext.request.contextPath}/"+userId+"/"+boardNum+"/deleteReply";
+			var query="replyNum="+replyNum+"&boardNum="+boardNum;
+			
+			var fn=function(data) {
+				if(data==true) {
+				}
+			}
+
+			ajaxJSON(url, "post", query, fn);
+		}
+
+		alert("댓글이 삭제되었습니다.");
+		location.reload();
+	});
+});
+
+$(function() {
 	$("body").on("click", ".deleteReply", function() {
-		var replyNum=$(this).attr("data-guestNum");
+		var replyNum=$(this).attr("data-replyNum");
 		var boardNum=$(this).attr("data-boardNum");
 		var userId="${sessionScope.member.userId}";
 		
@@ -98,7 +137,7 @@ $(function() {
 		<div class="guestBookmenu">
 			<span>
 				<input type="checkbox" class="allCheck" style="margin-right: 5px;">
-				<button class="replybtn1 deleteGuest">삭제</button>
+				<button class="replybtn1 deleteAll">삭제</button>
 			</span>
 			<span style="float: right;">
 				<a><i class="fas fa-search"></i></a>
@@ -108,7 +147,7 @@ $(function() {
 			<c:forEach var="dto" items="${list}">
 			<ul class="guestBooklist-ul">
 				<li>
-					<div><input type="checkbox" name="chk" value="${dto.replyNum}"></div>
+					<div><input type="checkbox" name="chk" class="check" data-replyNum="${dto.replyNum}" data-boardNum="${dto.boardNum}" value="${dto.replyNum}"></div>
 					<div>
 						<ul>
 							<li style="color: #a2a2a2;"><span style="margin-right:5px; font-weight: bold; color: black;">${dto.userNick}</span>${dto.created}</li>
@@ -121,12 +160,12 @@ $(function() {
 						</ul>
 					</div>
 					<span class="guestSpanbtn" style="float: right; margin-top: 7px; display: none;">
-						<select name="secretType" id="secretType" data-blogNum="${dto.blogNum}" data-guestNum="${dto.replyNum}">
+						<select name="secretType" id="secretType" data-blogNum="${dto.blogNum}" data-replyNum="${dto.replyNum}">
 							<option value="false" ${dto.secretType=='false'?"selected='selected'":""}>공개</option>
 							<option value="true" ${dto.secretType=='true'?"selected='selected'":""}>비공개</option>
 						</select>
 						<button class="btn5">차단</button>
-						<button class="btn5 deleteReply" data-boardNum="${dto.boardNum}" data-guestNum="${dto.replyNum}">삭제</button>
+						<button class="btn5 deleteReply" data-boardNum="${dto.boardNum}" data-replyNum="${dto.replyNum}">삭제</button>
 					</span>
 				</li>
 			</ul>

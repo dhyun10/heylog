@@ -179,6 +179,7 @@ public class ManageController {
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("paging", paging);
 		model.addAttribute("rows", rows);
+		model.addAttribute("blogNum", dto.getBlogNum());
 		
 		return ".four.manage.blog.guestbook";
 	}

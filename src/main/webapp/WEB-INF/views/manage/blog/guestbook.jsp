@@ -33,6 +33,10 @@ $(function() {
 			$("input[name=chk]").prop("checked", false);
 		}
 	});
+	
+	$("body").on("click", ".check", function() {
+		$(".allCheck").prop("checked", false);
+	});
 });
 
 $(function() {
@@ -43,6 +47,39 @@ $(function() {
 		$(this).find(".guestSpanbtn").css("display", "none");
 	});
 	
+});
+
+$(function() {
+	$("body").on("click", ".deleteAll", function() {
+		if(!confirm("선택하신 방명록을 삭제하시겠습니까?")) {
+			return;
+		}
+		
+		var checkArr=new Array();
+		
+		$("input[name='chk']:checked").each(function() {
+			checkArr.push($(this).attr("data-guestNum"));
+		});
+		
+		for(var i=0; i<checkArr.length; i++) {
+			var blogNum="${blogNum}";
+			var guestNum=checkArr[i];
+			var userId="${sessionScope.member.userId}";
+			
+			var url="${pageContext.request.contextPath}/"+userId+"/deleteGuest";
+			var query="blogNum="+blogNum+"&guestNum="+guestNum;
+			
+			var fn=function(data) {
+				if(data==true) {
+				}
+			}
+
+			ajaxJSON(url, "post", query, fn);
+		}
+
+		alert("방명록이 삭제되었습니다.");
+		location.reload();
+	});
 });
 
 $(function() {
@@ -90,6 +127,7 @@ $(function() {
 		ajaxJSON(url, "post", query, fn);
 	});
 });
+
 </script>
 <div id="body-page">
 	<div class="right-article">
@@ -97,7 +135,7 @@ $(function() {
 		<div class="guestBookmenu">
 			<span>
 				<input type="checkbox" class="allCheck" style="margin-right: 5px;">
-				<button class="replybtn1 deleteGuest">삭제</button>
+				<button class="replybtn1 deleteAll">삭제</button>
 			</span>
 			<span style="float: right;">
 				<a><i class="fas fa-search"></i></a>
@@ -107,7 +145,7 @@ $(function() {
 			<c:forEach var="dto" items="${list}">
 			<ul class="guestBooklist-ul">
 				<li>
-					<div><input type="checkbox" name="chk" value="${dto.guestNum}"></div>
+					<div><input type="checkbox" name="chk" class="check" data-guestNum="${dto.guestNum}" value="${dto.guestNum}"></div>
 					<div>
 						<ul>
 							<li style="color: #a2a2a2;"><span style="margin-right:5px; font-weight: bold; color: black;">${dto.userNick}</span>${dto.created}</li>

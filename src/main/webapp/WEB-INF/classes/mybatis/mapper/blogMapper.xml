@@ -201,8 +201,15 @@
 		]]>
 	</update>
 	
+	<update id="replyUpdateSort2" parameterType="com.myblog.heylog.blog.Reply">
+		<![CDATA[
+		update boardReply set grpOrd=grpOrd-1
+		where grpNum=#{grpNum} and grpOrd>#{grpOrd}
+		]]>
+	</update>
+	
 	<select id="replyUser" resultType="String">
-		select NVL(Max(userNick), 'X') replyUser from member1 m
+		select NVL(Max(userNick), ' ') replyUser from member1 m
 		join boardReply r on r.userId=m.userId
 		where replyNum=#{replyType}
 	</select>

@@ -177,9 +177,11 @@ $(function() {
 		}
 		
 		var replyNum=$(this).attr("data-replyNum");
+		var grpNum=$(this).attr("data-grpNum");
+		var grpOrd=$(this).attr("data-grpOrd");
 		
 		var url=q+"deleteReply";
-		var query="replyNum="+replyNum+"&boardNum="+boardNum;
+		var query="replyNum="+replyNum+"&boardNum="+boardNum+"&grpNum="+grpNum+"&grpOrd="+grpOrd;
 		
 		var fn=function(data) {
 			var state=data.state;

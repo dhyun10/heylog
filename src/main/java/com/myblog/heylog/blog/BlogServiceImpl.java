@@ -237,6 +237,7 @@ public class BlogServiceImpl implements BlogService {
 	@Override
 	public void deleteBoardReply(Reply dto) throws Exception {
 		try {
+			dao.updateData("blog.replyUpdateSort2", dto);
 			dao.deleteData("blog.deleteReply", dto);
 		} catch (Exception e) {
 			e.printStackTrace();

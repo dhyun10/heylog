@@ -34,7 +34,7 @@
 					<li><a href="${pageContext.request.contextPath}/manage/setting">블로그 관리</a></li>
 				</ul>
 				<ul>
-					<li>글 관리</li>
+					<li><a href="${pageContext.request.contextPath}/manage/board">글 관리</a></li>
 				</ul>
 				<ul>
 					<li><a href="${pageContext.request.contextPath}/manage/category">카테고리 관리</a></li>
